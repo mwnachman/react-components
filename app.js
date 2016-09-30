@@ -13,29 +13,54 @@
 
 
 // )
-var GroceryListItem = (props) => ( 
-  <ul>
-    <li>{props.items[0]}</li>
-    <li>{props.items[1]}</li>
-    <li>{props.items[2]}</li>
-  </ul>
-);
 
-var GroceryList = () => (
-  <div>
-    <GroceryListItem items={['Eggs', 'Cabbage', 'Cheetos']}/>
-  </div>
-);
-    
-var App = () => (
+class GroceryListItem extends React.Component {
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      hover: false
+    };
+  }
+
+  onListItemHover() {
+    this.setState({
+      hover: !this.state.hover
+    });
+  }
+
+  render() {
+    var style = {
+      fontWeight: this.state.hover ? 'bold' : 'normal'
+    };
+
+    return (
+      <li style={style} onMouseEnter={this.onListItemHover.bind(this)}
+                        onMouseLeave={this.onListItemHover.bind(this)}>{this.props.item}</li>
+    )
+  }
+};
+
+var GroceryList = (props) => (
   <div>
     <h2>Grocery List</h2>
-    <GroceryList /> 
-  {/* here we are creating an instance of the 'GroceryList' component -- also, this is the way to comment things*/}
+    <ul>
+      {props.list.map( item => (
+        <GroceryListItem item={item}/>
+      ))}
+    </ul>
+  </div>
+);
+
+var App = (props) => (
+
+  <div>
+    <GroceryList list={props.list}/>
+    {/* here we are creating an instance of the 'GroceryList' component -- also, this is the way to comment things*/}
   </div>
 
 );
 
+var groceryList = ['Eggs', 'Cabbage', 'Cheetos'];
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App list={groceryList}/>, document.getElementById('app'));
